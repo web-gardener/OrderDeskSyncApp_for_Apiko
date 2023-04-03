@@ -12,5 +12,7 @@
 
 `npm run start`
 
-### For every 1h you'll get new (last 50) orders from your store
-### You can change time in [OrderDesk.api.ts](src%2FexternalAPIs%2FOrderDesk.api.ts) -> callInterval value in ms
+## Info
+
+#### For every 1h you'll get new (last 50) orders from your store
+#### You can change time in [OrderDesk.api.ts](src%2FexternalAPIs%2FOrderDesk.api.ts) -> callInterval value in ms
