@@ -1,6 +1,5 @@
 import axios, {AxiosInstance} from "axios";
 import {IAuth, IAuthData, INewData, IOrder, Types} from "../interfaces/orders.interfaces";
-import moment from "moment";
 
 class OrderDeskApi {
     private callInterval = 3600000;
@@ -23,7 +22,7 @@ class OrderDeskApi {
             if (!regData) throw new Error("No reg data");
             if (!this.fetchReg(regData)) throw new Error("Bad reg data");
             console.warn(`Successfully auth! Get new data every ${(this.callInterval / 1000)}sec...`)
-            this.newDataCall();
+            this.makeIteration();
         }).catch((reason) => {
             console.error("Auth error");
             console.error(reason.message);
@@ -40,7 +39,7 @@ class OrderDeskApi {
     };
 
     private async newDataCall() {
-        const searchDate = moment(Date.now() + this.timeOffset - this.callInterval).format("YYYY-MM-DD HH:mm:ss");
+        const searchDate = new Date(Date.now() + this.timeOffset - this.callInterval).toISOString();
         const qParams = `?search_start_date=${searchDate}`;
         const data: IAuth<INewData> = await this.axiosClient.get(`https://app.orderdesk.me/api/v2/orders${qParams}`)
         if (!this.fetchData(data)) return;
@@ -72,7 +71,7 @@ class OrderDeskApi {
 
     private mapAddress(data: INewData) {
         data.orders = data.orders.map((value) => {
-            value.shipping.address = value.shipping.address1 ?? value.shipping.address2 ?? value.shipping.address3 ?? value.shipping.address4;
+            value.shipping.address = '${value.shipping.address1} ${value.shipping.address2} ${value.shipping.address3} ${value.shipping.address4}';
             return value;
         })
         return data;
